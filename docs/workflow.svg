@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-labelledby="title desc">
+<title id="title">Temporal memory retrieval workflow</title>
+<desc id="desc">Memories pass through time, permission, status, and supersession gates before ranking.</desc>
+<rect width="1200" height="330" fill="#0a0f1c"/>
+<text x="58" y="54" fill="#f8fafc" font-family="Arial,sans-serif" font-size="29" font-weight="700">The most relevant stale fact is still stale.</text>
+<path d="M90 170 H1110" stroke="#25324a" stroke-width="5" stroke-linecap="round"/>
+<g font-family="Arial,sans-serif">
+  <g transform="translate(110 0)"><circle cy="170" r="27" fill="#60a5fa"/><text y="177" text-anchor="middle" font-size="19" font-weight="700">1</text><text y="220" text-anchor="middle" fill="#dbeafe" font-size="15">known by then?</text></g>
+  <g transform="translate(310 0)"><circle cy="170" r="27" fill="#38bdf8"/><text y="177" text-anchor="middle" font-size="19" font-weight="700">2</text><text y="220" text-anchor="middle" fill="#dbeafe" font-size="15">valid then?</text></g>
+  <g transform="translate(510 0)"><circle cy="170" r="27" fill="#22d3ee"/><text y="177" text-anchor="middle" font-size="19" font-weight="700">3</text><text y="220" text-anchor="middle" fill="#dbeafe" font-size="15">allowed use?</text></g>
+  <g transform="translate(710 0)"><circle cy="170" r="27" fill="#a78bfa"/><text y="177" text-anchor="middle" font-size="19" font-weight="700">4</text><text y="220" text-anchor="middle" fill="#ede9fe" font-size="15">superseded?</text></g>
+  <g transform="translate(910 0)"><circle cy="170" r="27" fill="#4ade80"/><text y="177" text-anchor="middle" font-size="19" font-weight="700">5</text><text y="220" text-anchor="middle" fill="#dcfce7" font-size="15">rank</text></g>
+  <g transform="translate(1080 0)"><circle cy="170" r="27" fill="#f8fafc"/><text y="177" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">✓</text><text y="220" text-anchor="middle" fill="#e2e8f0" font-size="15">return</text></g>
+</g>
+<g fill="#f59e0b" font-family="Arial,sans-serif" font-size="13">
+  <text x="110" y="116" text-anchor="middle">NO → exclude</text>
+  <text x="310" y="116" text-anchor="middle">NO → exclude</text>
+  <text x="510" y="116" text-anchor="middle">NO → exclude</text>
+  <text x="710" y="116" text-anchor="middle">YES → exclude</text>
+</g>
+<text x="1140" y="292" fill="#64748b" font-family="Arial,sans-serif" font-size="13" text-anchor="end">No ghosts from 2024 in today's preferences.</text>
+</svg>
