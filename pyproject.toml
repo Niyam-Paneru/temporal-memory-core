@@ -5,8 +5,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "temporal-memory-core"
 version = "0.1.0"
-description = "Small public proof extracted from a larger private system."
+description = "Temporal memory eligibility with knowledge time, valid time, use permissions, supersession, and abstention."
 requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["ai-memory","temporal-data","retrieval","provenance","personal-ai"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
