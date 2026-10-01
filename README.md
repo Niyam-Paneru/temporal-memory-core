@@ -2,93 +2,48 @@
 
 **Remembering is easy. Remembering that an old truth can become a current bug is the interesting part.**
 
-This repo is a public, sanitized slice of the memory model behind my private `Niyam-AI` work.
+This is a public slice of the memory model behind my private Niyam-AI work.
 
-A memory here is not just text. It carries:
+A memory here is not just text. It has two clocks, a use boundary, lifecycle state, and supersession.
 
-- when it was learned;
-- when it was valid;
-- what it supersedes;
-- what it is allowed to be used for;
-- whether it is active, uncertain, or retired.
+![Temporal retrieval workflow](docs/workflow.svg)
 
-## The rule
+## The uncomfortable rule
 
-```text
-retrieve candidate
-        |
-        v
-known by then? ---- no ---> exclude
-        |
-       yes
-        |
-        v
-valid at that time? -- no --> exclude
-        |
-       yes
-        |
-        v
-allowed for this use? -- no --> exclude
-        |
-       yes
-        |
-        v
-superseded by an eligible newer memory? -- yes --> exclude
-        |
-       no
-        |
-        v
-rank
-```
+**Filter first. Rank second.**
 
-If retrieval is allowed to “sort first, filter later,” stale personal facts can win simply because they match the query well. That is exactly backwards.
+A stale or forbidden memory does not get to win because its embedding — or in this tiny public version, its words — happen to match beautifully.
 
-## Run
+The pipeline asks:
 
-```bash
-PYTHONPATH=src python -m unittest discover -s tests
-```
+1. did the system know this by the requested knowledge time?
+2. was it true at the requested world time?
+3. is it allowed for this use?
+4. is it still active?
+5. has an eligible newer memory superseded it?
+6. only then: how relevant is it?
 
-## Example
+## Why two clocks?
 
-```python
-from datetime import datetime, timezone
-from temporal_memory.core import Memory, retrieve
+Because these are different questions:
 
-memories = [
-    Memory(
-        id="old",
-        text="prefers long answers",
-        learned_at="2026-01-01T00:00:00Z",
-        valid_from="2026-01-01T00:00:00Z",
-        valid_until="2026-03-01T00:00:00Z",
-        allowed_use=frozenset({"retrieval"}),
-    ),
-    Memory(
-        id="new",
-        text="prefers concise answers",
-        learned_at="2026-03-01T00:00:00Z",
-        valid_from="2026-03-01T00:00:00Z",
-        supersedes=("old",),
-        allowed_use=frozenset({"retrieval"}),
-    ),
-]
+- “When did this become true?”
+- “When did the system learn it?”
 
-print(retrieve("answer preference", memories))
-```
+If a preference changed in March but the assistant only learned that in April, a February reconstruction should not magically know the future.
 
-## What this proves
+## Repo map
 
-- valid-time vs knowledge-time filtering;
-- supersession;
-- permission-before-ranking;
-- deterministic lexical retrieval;
-- deliberate abstention when nothing eligible exists.
+| Area | Responsibility |
+|---|---|
+| `models.py` | immutable memory record |
+| `time.py` | knowledge-time and valid-time rules |
+| `filters.py` | permission, state, and supersession |
+| `ranking.py` | small auditable relevance scorer |
+| `core.py` | stable public facade |
+| `tests/` | time, permission, supersession, ranking |
+| `docs/` | the reasoning behind the model |
 
-## Boundary
+The private project adds SQLite persistence, audit history, export ingestion, candidate review, evals, and model adapters. None of that personal data belongs here.
 
-No ChatGPT export, private conversation text, embeddings, API keys, personal database, or user data is included here.
-
-## Provenance
-
-Rewritten from the memory/retrieval experiments in private `Niyam-AI`. The private project contains a larger SQLite store, audit log, candidate-review pipeline, eval harness, continuity ledger, and model adapters.
+> Memory should be helpful, not haunted.
