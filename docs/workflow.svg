@@ -1,22 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-labelledby="title desc">
-<title id="title">Temporal memory retrieval workflow</title>
-<desc id="desc">Memories pass through time, permission, status, and supersession gates before ranking.</desc>
-<rect width="1200" height="330" fill="#0a0f1c"/>
-<text x="58" y="54" fill="#f8fafc" font-family="Arial,sans-serif" font-size="29" font-weight="700">The most relevant stale fact is still stale.</text>
-<path d="M90 170 H1110" stroke="#25324a" stroke-width="5" stroke-linecap="round"/>
-<g font-family="Arial,sans-serif">
-  <g transform="translate(110 0)"><circle cy="170" r="27" fill="#60a5fa"/><text y="177" text-anchor="middle" font-size="19" font-weight="700">1</text><text y="220" text-anchor="middle" fill="#dbeafe" font-size="15">known by then?</text></g>
-  <g transform="translate(310 0)"><circle cy="170" r="27" fill="#38bdf8"/><text y="177" text-anchor="middle" font-size="19" font-weight="700">2</text><text y="220" text-anchor="middle" fill="#dbeafe" font-size="15">valid then?</text></g>
-  <g transform="translate(510 0)"><circle cy="170" r="27" fill="#22d3ee"/><text y="177" text-anchor="middle" font-size="19" font-weight="700">3</text><text y="220" text-anchor="middle" fill="#dbeafe" font-size="15">allowed use?</text></g>
-  <g transform="translate(710 0)"><circle cy="170" r="27" fill="#a78bfa"/><text y="177" text-anchor="middle" font-size="19" font-weight="700">4</text><text y="220" text-anchor="middle" fill="#ede9fe" font-size="15">superseded?</text></g>
-  <g transform="translate(910 0)"><circle cy="170" r="27" fill="#4ade80"/><text y="177" text-anchor="middle" font-size="19" font-weight="700">5</text><text y="220" text-anchor="middle" fill="#dcfce7" font-size="15">rank</text></g>
-  <g transform="translate(1080 0)"><circle cy="170" r="27" fill="#f8fafc"/><text y="177" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">✓</text><text y="220" text-anchor="middle" fill="#e2e8f0" font-size="15">return</text></g>
-</g>
-<g fill="#f59e0b" font-family="Arial,sans-serif" font-size="13">
-  <text x="110" y="116" text-anchor="middle">NO → exclude</text>
-  <text x="310" y="116" text-anchor="middle">NO → exclude</text>
-  <text x="510" y="116" text-anchor="middle">NO → exclude</text>
-  <text x="710" y="116" text-anchor="middle">YES → exclude</text>
-</g>
-<text x="1140" y="292" fill="#64748b" font-family="Arial,sans-serif" font-size="13" text-anchor="end">No ghosts from 2024 in today's preferences.</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="t d">
+<title id="t">Temporal memory eligibility diagram</title><desc id="d">Known, valid, and allowed memories overlap; supersession and ranking happen only inside the eligible set.</desc>
+<rect width="1200" height="520" fill="#f5f5f1"/>
+<text x="58" y="64" fill="#71716a" font-family="Arial,sans-serif" font-size="14" letter-spacing="3">TEMPORAL MEMORY</text>
+<text x="58" y="108" fill="#171714" font-family="Georgia,serif" font-size="35">Relevant is useless if the memory is not eligible.</text>
+<circle cx="440" cy="290" r="150" fill="#e4edb0" fill-opacity=".8" stroke="#596e35" stroke-width="2"/>
+<circle cx="620" cy="290" r="150" fill="#dce9de" fill-opacity=".8" stroke="#4f7555" stroke-width="2"/>
+<circle cx="530" cy="390" r="150" fill="#f1d9dc" fill-opacity=".8" stroke="#a4243b" stroke-width="2"/>
+<text x="365" y="245" text-anchor="middle" fill="#171714" font-family="Arial,sans-serif" font-size="20" font-weight="700">known by then</text>
+<text x="695" y="245" text-anchor="middle" fill="#171714" font-family="Arial,sans-serif" font-size="20" font-weight="700">valid then</text>
+<text x="530" y="455" text-anchor="middle" fill="#171714" font-family="Arial,sans-serif" font-size="20" font-weight="700">allowed for this use</text>
+<circle cx="530" cy="330" r="54" fill="#171714"/><text x="530" y="326" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="13" letter-spacing="1.5">ELIGIBLE</text><text x="530" y="347" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="12">then rank</text>
+<rect x="875" y="208" width="255" height="138" rx="18" fill="#fff" stroke="#d8d8d1" stroke-width="2"/>
+<text x="900" y="242" fill="#71716a" font-family="Arial,sans-serif" font-size="13" letter-spacing="2">AFTER ELIGIBILITY</text><text x="900" y="276" fill="#171714" font-family="Arial,sans-serif" font-size="19" font-weight="700">supersede → score</text><text x="900" y="306" fill="#71716a" font-family="Arial,sans-serif" font-size="14">future knowledge cannot rewrite the past</text>
 </svg>
