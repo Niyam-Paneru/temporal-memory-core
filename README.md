@@ -46,4 +46,6 @@ If a preference changed in March but the assistant only learned that in April, a
 
 The private project adds SQLite persistence, audit history, export ingestion, candidate review, evals, and model adapters. None of that personal data belongs here.
 
+Want to inspect the time semantics? Read the [invariants](docs/invariants.md), [failure modes](docs/failure-modes.md), [eligibility table](docs/eligibility-table.md), and [preference-change walkthrough](docs/walkthrough.md).
+
 > Memory should be helpful, not haunted.
