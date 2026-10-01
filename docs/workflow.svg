@@ -1,15 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="t d">
-<title id="t">Temporal memory eligibility diagram</title><desc id="d">Known, valid, and allowed memories overlap; supersession and ranking happen only inside the eligible set.</desc>
+<title id="t">Temporal memory retrieval architecture</title><desc id="d">Memory candidates pass knowledge-time, valid-time, permission, and supersession filters before ranking.</desc>
 <rect width="1200" height="520" fill="#f5f5f1"/>
-<text x="58" y="64" fill="#71716a" font-family="Arial,sans-serif" font-size="14" letter-spacing="3">TEMPORAL MEMORY</text>
-<text x="58" y="108" fill="#171714" font-family="Georgia,serif" font-size="35">Relevant is useless if the memory is not eligible.</text>
-<circle cx="440" cy="290" r="150" fill="#e4edb0" fill-opacity=".8" stroke="#596e35" stroke-width="2"/>
-<circle cx="620" cy="290" r="150" fill="#dce9de" fill-opacity=".8" stroke="#4f7555" stroke-width="2"/>
-<circle cx="530" cy="390" r="150" fill="#f1d9dc" fill-opacity=".8" stroke="#a4243b" stroke-width="2"/>
-<text x="365" y="245" text-anchor="middle" fill="#171714" font-family="Arial,sans-serif" font-size="20" font-weight="700">known by then</text>
-<text x="695" y="245" text-anchor="middle" fill="#171714" font-family="Arial,sans-serif" font-size="20" font-weight="700">valid then</text>
-<text x="530" y="455" text-anchor="middle" fill="#171714" font-family="Arial,sans-serif" font-size="20" font-weight="700">allowed for this use</text>
-<circle cx="530" cy="330" r="54" fill="#171714"/><text x="530" y="326" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="13" letter-spacing="1.5">ELIGIBLE</text><text x="530" y="347" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="12">then rank</text>
-<rect x="875" y="208" width="255" height="138" rx="18" fill="#fff" stroke="#d8d8d1" stroke-width="2"/>
-<text x="900" y="242" fill="#71716a" font-family="Arial,sans-serif" font-size="13" letter-spacing="2">AFTER ELIGIBILITY</text><text x="900" y="276" fill="#171714" font-family="Arial,sans-serif" font-size="19" font-weight="700">supersede → score</text><text x="900" y="306" fill="#71716a" font-family="Arial,sans-serif" font-size="14">future knowledge cannot rewrite the past</text>
+<text x="56" y="62" fill="#71716a" font-family="Arial,sans-serif" font-size="13" letter-spacing="3">TEMPORAL MEMORY CORE</text>
+<text x="56" y="105" fill="#171714" font-family="Georgia,serif" font-size="34">Filter first. Rank second.</text>
+
+<rect x="58" y="175" width="200" height="90" rx="14" fill="#fff" stroke="#171714" stroke-width="2"/>
+<text x="82" y="205" fill="#71716a" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">CANDIDATES</text>
+<text x="82" y="236" fill="#171714" font-family="Arial,sans-serif" font-size="20" font-weight="700">memory records</text>
+
+<rect x="330" y="135" width="350" height="170" rx="16" fill="#fff" stroke="#171714" stroke-width="2"/>
+<text x="355" y="169" fill="#71716a" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">ELIGIBILITY FILTER</text>
+<text x="355" y="202" fill="#171714" font-family="Georgia,serif" font-size="25">Can this memory participate?</text>
+<text x="355" y="240" fill="#4e4e48" font-family="Arial,sans-serif" font-size="14">known by requested time</text>
+<text x="520" y="240" fill="#4e4e48" font-family="Arial,sans-serif" font-size="14">valid at requested time</text>
+<text x="355" y="269" fill="#4e4e48" font-family="Arial,sans-serif" font-size="14">allowed for this use</text>
+<text x="520" y="269" fill="#4e4e48" font-family="Arial,sans-serif" font-size="14">not superseded</text>
+
+<rect x="760" y="155" width="170" height="130" rx="16" fill="#fff" stroke="#171714" stroke-width="2"/>
+<text x="785" y="188" fill="#71716a" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">RANK</text>
+<text x="785" y="221" fill="#171714" font-family="Georgia,serif" font-size="24">Relevant?</text>
+<text x="785" y="255" fill="#4e4e48" font-family="Arial,sans-serif" font-size="14">only eligible rows</text>
+
+<rect x="1000" y="175" width="150" height="90" rx="14" fill="#e4edb0" stroke="#596e35" stroke-width="2"/>
+<text x="1022" y="205" fill="#596e35" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">RETURN</text>
+<text x="1022" y="236" fill="#171714" font-family="Arial,sans-serif" font-size="20" font-weight="700">top memory</text>
+
+<g stroke="#171714" stroke-width="2" fill="none"><path d="M258 220 H330"/><path d="M680 220 H760"/><path d="M930 220 H1000"/></g>
+<g fill="#171714"><path d="M322 214 l10 6 -10 6z"/><path d="M752 214 l10 6 -10 6z"/><path d="M992 214 l10 6 -10 6z"/></g>
+
+<rect x="330" y="360" width="600" height="72" rx="14" fill="#fff" stroke="#d8d8d1"/>
+<text x="355" y="390" fill="#a4243b" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">EXCLUDED BEFORE RANKING</text>
+<text x="355" y="416" fill="#171714" font-family="Georgia,serif" font-size="19">Future knowledge, stale facts, forbidden use, retired records.</text>
 </svg>
