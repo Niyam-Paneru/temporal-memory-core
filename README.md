@@ -1,62 +1,64 @@
 # Temporal Memory Core
 
-**Remembering is easy. Remembering that an old truth can become a current bug is the interesting part.**
+A small Python reference implementation for deciding **which memories are eligible at a requested knowledge time and world time before relevance ranking begins**.
 
-This is a public slice of the memory model behind my private Niyam-AI work.
+![Temporal memory eligibility decision tree](docs/workflow.svg)
 
-A memory here is not just text. It has two clocks, a use boundary, lifecycle state, and supersession.
+## Eligibility before relevance
 
-![Temporal retrieval workflow](docs/workflow.svg)
+`retrieve()` does not score every stored row and hope the best match is safe. It first narrows the candidate set in this order:
 
-## The uncomfortable rule
+1. **Known by `known_at`?** `learned_at <= known_at`; otherwise exclude it as future knowledge.
+2. **Valid at `at`?** `at` must be on/after `valid_from` (or `learned_at` when no `valid_from` is set) and before `valid_until` when present.
+3. **Allowed for this use?** `required_use` must be in `allowed_use`.
+4. **Active?** `status` must equal `"active"`.
+5. **Superseded by an eligible row?** Only IDs named by rows that survived the first four gates are removed.
+6. **Relevant?** The remaining rows receive a small lexical token-overlap score. Zero-overlap rows are dropped; the rest are ordered by score, then ID, and truncated to `top_k`.
 
-**Filter first. Rank second.**
+That ordering is the contract: an ineligible row cannot score its way back into a result, and a future or forbidden superseding row cannot erase an older eligible memory.
 
-A stale or forbidden memory does not get to win because its embedding — or in this tiny public version, its words — happen to match beautifully.
+## Two clocks, one concrete example
 
-The pipeline asks:
+Suppose a synthetic record says an office moved on **February 1**, but the system did not learn that fact until **February 10**:
 
-1. did the system know this by the requested knowledge time?
-2. was it true at the requested world time?
-3. is it allowed for this use?
-4. is it still active?
-5. has an eligible newer memory superseded it?
-6. only then: how relevant is it?
+```python
+Memory(
+    id="office-location",
+    text="office is in Patan",
+    valid_from="2026-02-01T00:00:00Z",
+    learned_at="2026-02-10T00:00:00Z",
+)
+```
 
-## Why two clocks?
+For the same world time, `at=2026-02-05T00:00:00Z`:
 
-Because these are different questions:
+- with `known_at=2026-02-20T00:00:00Z`, the record passes both time gates: by February 20 the system knows the move was already true on February 5;
+- with `known_at=2026-02-05T00:00:00Z`, it is excluded: a reconstruction of what the system knew on February 5 cannot use knowledge learned five days later.
 
-- “When did this become true?”
-- “When did the system learn it?”
+This is why `at` and `known_at` are separate inputs rather than one generic timestamp.
 
-If a preference changed in March but the assistant only learned that in April, a February reconstruction should not magically know the future.
+## Where to inspect the implementation
 
-## Repo map
-
-| Area | Responsibility |
+| File | What it proves |
 |---|---|
-| `models.py` | immutable memory record |
-| `time.py` | knowledge-time and valid-time rules |
-| `filters.py` | permission, state, and supersession |
-| `ranking.py` | small auditable relevance scorer |
-| `core.py` | stable public facade |
-| `tests/` | time, permission, supersession, ranking |
-| `docs/` | the reasoning behind the model |
+| [`src/temporal_memory/time.py`](src/temporal_memory/time.py) | UTC parsing, knowledge-time gate, valid-time interval semantics |
+| [`src/temporal_memory/filters.py`](src/temporal_memory/filters.py) | permission, lifecycle, and eligible-only supersession |
+| [`src/temporal_memory/ranking.py`](src/temporal_memory/ranking.py) | auditable lexical scoring, abstention, deterministic ordering |
+| [`src/temporal_memory/models.py`](src/temporal_memory/models.py) | immutable public memory record |
+| [`tests/test_core.py`](tests/test_core.py) | end-to-end retrieval contract, including historical supersession |
+| [`tests/`](tests/) | focused time, filter, ranking, and facade behavior |
 
-The private project adds SQLite persistence, audit history, export ingestion, candidate review, evals, and model adapters. None of that personal data belongs here.
+## Run the proof
 
-Want to inspect the time semantics? Read the [invariants](docs/invariants.md), [failure modes](docs/failure-modes.md), [eligibility table](docs/eligibility-table.md), and [preference-change walkthrough](docs/walkthrough.md).
+```bash
+python -m pip install -e .
+python -m unittest discover -s tests
+```
 
-> Memory should be helpful, not haunted.
+The repository's CI also compiles `src/` and checks the public proof/documentation boundary.
 
-## Inspect deeper
+## Scope and provenance
 
-- [Design overview](docs/overview.md)
-- [Why the design looks this way](docs/decisions.md)
-- [Invariants that must survive refactors](docs/invariants.md)
-- [How it fails on purpose](docs/failure-modes.md)
-- [Security / privacy boundary](SECURITY.md)
-- [Where this public slice came from](PROVENANCE.md)
+This repository demonstrates temporal eligibility over **synthetic records**. The public implementation uses lexical token overlap for ranking; it does **not** include a personal memory database, ChatGPT export data, persistence layer, embedding/vector database, model adapter, or production access controls.
 
-The README is the front door. The interesting arguments are in those files.
+The privacy boundary is in [`SECURITY.md`](SECURITY.md), and the public/private claim boundary is in [`PROVENANCE.md`](PROVENANCE.md). For the behavioral contract, see [`docs/invariants.md`](docs/invariants.md), [`docs/eligibility-table.md`](docs/eligibility-table.md), and [`docs/failure-modes.md`](docs/failure-modes.md).
