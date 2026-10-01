@@ -6,9 +6,15 @@ build-backend = "setuptools.build_meta"
 name = "temporal-memory-core"
 version = "0.1.0"
 description = "Temporal memory eligibility with knowledge time, valid time, use permissions, supersession, and abstention."
+readme = "README.md"
+authors = [{ name = "Niyam Paneru" }]
 requires-python = ">=3.10"
 license = { text = "MIT" }
 keywords = ["ai-memory","temporal-data","retrieval","provenance","personal-ai"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[project.urls]
+Homepage = "https://github.com/Niyam-Paneru/temporal-memory-core"
+Source = "https://github.com/Niyam-Paneru/temporal-memory-core"
