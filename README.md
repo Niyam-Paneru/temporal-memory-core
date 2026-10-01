@@ -49,3 +49,12 @@ The private project adds SQLite persistence, audit history, export ingestion, ca
 Want to inspect the time semantics? Read the [invariants](docs/invariants.md), [failure modes](docs/failure-modes.md), [eligibility table](docs/eligibility-table.md), and [preference-change walkthrough](docs/walkthrough.md).
 
 > Memory should be helpful, not haunted.
+
+## Inspect deeper
+
+- [Design overview](docs/overview.md)
+- [Why the design looks this way](docs/decisions.md)
+- [How it fails on purpose](docs/failure-modes.md)
+- [Security / privacy boundary](SECURITY.md)
+
+The README is the front door. The interesting arguments are in those files.
