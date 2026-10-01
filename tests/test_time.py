@@ -25,6 +25,19 @@ class TimeTests(unittest.TestCase):
             )
         )
 
+    def test_naive_known_time_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "known_at_must_be_timezone_aware"):
+            known_by("2026-01-01T00:00:00Z", known_at=datetime(2026, 1, 2))
+
+    def test_naive_valid_time_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "at_must_be_timezone_aware"):
+            valid_at(
+                learned_at="2026-01-01T00:00:00Z",
+                valid_from=None,
+                valid_until=None,
+                at=datetime(2026, 1, 2),
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
