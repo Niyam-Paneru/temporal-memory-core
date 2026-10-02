@@ -2,21 +2,43 @@
 
 A Python implementation of temporal memory eligibility: decide what was known, what was valid, and what was allowed for a specific use **before** relevance ranking begins.
 
+**Even a perfect text match does not get a time machine.**
+
+This public sample comes from my private Niyam-AI memory work. It exposes the retrieval rules with synthetic records; I can build and adapt the surrounding memory stores, search layers, and application integrations.
+
+## Eligibility: decide what may enter retrieval
+
+Check knowledge time, valid time, use permission, and active status in that order. The exact conditions are listed below.
+
 ```mermaid
-flowchart TD
-    A[Candidate memory] --> B{"Known by known_at?<br/>learned_at <= known_at"}
-    B -- No --> X[Exclude before ranking]
-    B -- Yes --> C{"Valid at at?<br/>inside the valid-time interval"}
-    C -- No --> X
-    C -- Yes --> D{"required_use allowed?"}
-    D -- No --> X
-    D -- Yes --> E{"status = active?"}
-    E -- No --> X
-    E -- Yes --> F[Eligible rows]
-    F --> G[Apply supersession using eligible rows only]
-    G --> H{"Lexical overlap > 0?"}
-    H -- No --> I[Abstain / omit]
-    H -- Yes --> J[Sort deterministically<br/>and take top_k]
+flowchart LR
+    A["<b>Candidate rows</b>"] --> E{"Eligible?"}
+    E -- No --> X["<b>Exclude</b><br/>Before ranking"]
+    E -- Yes --> F["<b>Eligible rows</b>"]
+    classDef input fill:#e8e6df,stroke:#55534a,color:#20201d,stroke-width:2px;
+    classDef pass fill:#d2e5d8,stroke:#38734d,color:#183923,stroke-width:2px;
+    classDef stop fill:#f4dadd,stroke:#b14253,color:#611c29,stroke-width:2px;
+    class A,E input;
+    class F pass;
+    class X stop;
+```
+
+## Ranking: supersession first, relevance second
+
+Only eligible rows can supersede another memory. Then lexical overlap decides whether a surviving row belongs in the result; no overlap means omission, and no matching rows means abstention.
+
+```mermaid
+flowchart LR
+    F["<b>Eligible rows</b>"] --> S["<b>Drop superseded</b><br/>Eligible rows only"]
+    S --> H{"Overlap > 0?"}
+    H -- No --> I["<b>Omit</b><br/>No matches: abstain"]
+    H -- Yes --> J["<b>Rank + top_k</b><br/>Stable order"]
+    classDef input fill:#e8e6df,stroke:#55534a,color:#20201d,stroke-width:2px;
+    classDef pass fill:#d2e5d8,stroke:#38734d,color:#183923,stroke-width:2px;
+    classDef stop fill:#f4dadd,stroke:#b14253,color:#611c29,stroke-width:2px;
+    class F,S,H input;
+    class J pass;
+    class I stop;
 ```
 
 ## Eligibility before relevance
@@ -30,7 +52,7 @@ flowchart TD
 5. **Superseded by an eligible row?** Only rows that survived the first four gates can supersede older rows.
 6. **Relevant?** Remaining rows receive lexical token-overlap scores; zero-overlap rows are dropped, then results are sorted and truncated to `top_k`.
 
-An ineligible row cannot score its way back into a result, and a future or forbidden superseding row cannot erase an older eligible memory. Even a perfect text match does not get a time machine.
+An ineligible row cannot score its way back into a result, and a future or forbidden superseding row cannot erase an older eligible memory.
 
 ## Two clocks, one example
 
