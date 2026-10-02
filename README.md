@@ -1,62 +1,62 @@
 # Temporal Memory Core
 
-**Remembering is easy. Remembering that an old truth can become a current bug is the interesting part.**
+A Python implementation of temporal memory eligibility: decide what was known, what was valid, and what was allowed for a specific use **before** relevance ranking begins.
 
-This is a public slice of the memory model behind my private Niyam-AI work.
+![Temporal memory eligibility decision tree](docs/workflow.svg)
 
-A memory here is not just text. It has two clocks, a use boundary, lifecycle state, and supersession.
+## Eligibility before relevance
 
-![Temporal retrieval workflow](docs/workflow.svg)
+`retrieve()` narrows candidates in this order:
 
-## The uncomfortable rule
+1. **Known by `known_at`?** `learned_at <= known_at`; otherwise exclude future knowledge.
+2. **Valid at `at`?** `at` must fall inside the record's valid-time interval.
+3. **Allowed for this use?** `required_use` must be in `allowed_use`.
+4. **Active?** `status` must equal `"active"`.
+5. **Superseded by an eligible row?** Only rows that survived the first four gates can supersede older rows.
+6. **Relevant?** Remaining rows receive lexical token-overlap scores; zero-overlap rows are dropped, then results are sorted and truncated to `top_k`.
 
-**Filter first. Rank second.**
+An ineligible row cannot score its way back into a result, and a future or forbidden superseding row cannot erase an older eligible memory.
 
-A stale or forbidden memory does not get to win because its embedding — or in this tiny public version, its words — happen to match beautifully.
+## Two clocks, one example
 
-The pipeline asks:
+Suppose an office moved on **February 1**, but the system learned that fact on **February 10**:
 
-1. did the system know this by the requested knowledge time?
-2. was it true at the requested world time?
-3. is it allowed for this use?
-4. is it still active?
-5. has an eligible newer memory superseded it?
-6. only then: how relevant is it?
+```python
+Memory(
+    id="office-location",
+    text="office is in Patan",
+    valid_from="2026-02-01T00:00:00Z",
+    learned_at="2026-02-10T00:00:00Z",
+)
+```
 
-## Why two clocks?
+For `at=2026-02-05T00:00:00Z`:
 
-Because these are different questions:
+- `known_at=2026-02-20T00:00:00Z` → include it; the system now knows the move was already true on February 5.
+- `known_at=2026-02-05T00:00:00Z` → exclude it; that historical view cannot use knowledge learned five days later.
 
-- “When did this become true?”
-- “When did the system learn it?”
+That is why world time (`at`) and knowledge time (`known_at`) are separate.
 
-If a preference changed in March but the assistant only learned that in April, a February reconstruction should not magically know the future.
+## Inspect the implementation
 
-## Repo map
-
-| Area | Responsibility |
+| File | Responsibility |
 |---|---|
-| `models.py` | immutable memory record |
-| `time.py` | knowledge-time and valid-time rules |
-| `filters.py` | permission, state, and supersession |
-| `ranking.py` | small auditable relevance scorer |
-| `core.py` | stable public facade |
-| `tests/` | time, permission, supersession, ranking |
-| `docs/` | the reasoning behind the model |
+| [`time.py`](src/temporal_memory/time.py) | UTC parsing, knowledge-time and valid-time semantics |
+| [`filters.py`](src/temporal_memory/filters.py) | use permission, lifecycle, eligible-only supersession |
+| [`ranking.py`](src/temporal_memory/ranking.py) | lexical scoring, abstention, deterministic ordering |
+| [`tests/`](tests/) | time, filtering, supersession, ranking, and retrieval behavior |
 
-The private project adds SQLite persistence, audit history, export ingestion, candidate review, evals, and model adapters. None of that personal data belongs here.
+## Run it
 
-Want to inspect the time semantics? Read the [invariants](docs/invariants.md), [failure modes](docs/failure-modes.md), [eligibility table](docs/eligibility-table.md), and [preference-change walkthrough](docs/walkthrough.md).
+```bash
+python -m pip install -e .
+python -m unittest discover -s tests
+```
 
-> Memory should be helpful, not haunted.
+The [CircleCI configuration](.circleci/config.yml) also compiles `src/` and checks the required public documentation files.
 
-## Inspect deeper
+## Scope
 
-- [Design overview](docs/overview.md)
-- [Why the design looks this way](docs/decisions.md)
-- [Invariants that must survive refactors](docs/invariants.md)
-- [How it fails on purpose](docs/failure-modes.md)
-- [Security / privacy boundary](SECURITY.md)
-- [Where this public slice came from](PROVENANCE.md)
+The repository uses synthetic records and lexical token overlap. It does **not** include personal memory data, ChatGPT exports, persistence, embeddings/vector search, a model adapter, or production access controls.
 
-The README is the front door. The interesting arguments are in those files.
+See [`SECURITY.md`](SECURITY.md), [`PROVENANCE.md`](PROVENANCE.md), [`docs/invariants.md`](docs/invariants.md), and [`docs/eligibility-table.md`](docs/eligibility-table.md) for the narrower contracts.

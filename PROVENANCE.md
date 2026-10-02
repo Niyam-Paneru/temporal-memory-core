@@ -1,19 +1,9 @@
 # Provenance
 
-This repository is a public memory-semantics slice from private Niyam-AI work.
+This repository isolates the temporal eligibility rules from private Niyam-AI memory work.
 
-## Preserved
+The public package keeps the two-clock model (knowledge time and valid time), per-use permission, lifecycle state, eligible-only supersession, abstention, and deterministic lexical ranking.
 
-- knowledge time vs valid time;
-- lifecycle state;
-- per-use permission;
-- supersession;
-- abstention before relevance ranking.
+It contains only synthetic records. There is no ChatGPT export, personal conversation data, private memory store, embedding/vector database, model adapter, persistence layer, or production access-control system here.
 
-## Rewritten for public review
-
-No ChatGPT export, personal conversation, private memory database, embedding store, API key, or model adapter is included.
-
-## Claim boundary
-
-The repo demonstrates temporal retrieval rules over synthetic records. It is not the full Niyam-AI memory system.
+The repository should be read as a small implementation of temporal retrieval semantics, not as the full Niyam-AI memory stack.
