@@ -11,13 +11,22 @@ This public sample comes from my private Niyam-AI memory work. It exposes the re
 Check knowledge time, valid time, use permission, and active status in that order. The exact conditions are listed below.
 
 ```mermaid
+---
+config:
+  flowchart:
+    curve: linear
+    nodeSpacing: 28
+    rankSpacing: 42
+---
 flowchart LR
-    A["<b>Candidate rows</b>"] --> E{"Eligible?"}
-    E -- No --> X["<b>Exclude</b><br/>Before ranking"]
-    E -- Yes --> F["<b>Eligible rows</b>"]
-    classDef input fill:#e8e6df,stroke:#55534a,color:#20201d,stroke-width:2px;
-    classDef pass fill:#d2e5d8,stroke:#38734d,color:#183923,stroke-width:2px;
-    classDef stop fill:#f4dadd,stroke:#b14253,color:#611c29,stroke-width:2px;
+    accTitle: Eligibility: decide what may enter retrieval
+    accDescr: Decision flow for eligibility: decide what may enter retrieval.
+    A["Candidate rows"] --> E{"Eligible?"}
+    E -- No --> X["Exclude<br/>Before ranking"]
+    E -- Yes --> F["Eligible rows"]
+    classDef input stroke-width:1.5px;
+    classDef pass stroke-width:2.5px;
+    classDef stop stroke-width:2px,stroke-dasharray:5 3;
     class A,E input;
     class F pass;
     class X stop;
@@ -28,14 +37,23 @@ flowchart LR
 Only eligible rows can supersede another memory. Then lexical overlap decides whether a surviving row belongs in the result; no overlap means omission, and no matching rows means abstention.
 
 ```mermaid
-flowchart LR
-    F["<b>Eligible rows</b>"] --> S["<b>Drop superseded</b><br/>Eligible rows only"]
+---
+config:
+  flowchart:
+    curve: linear
+    nodeSpacing: 28
+    rankSpacing: 42
+---
+flowchart TB
+    accTitle: Ranking: supersession first, relevance second
+    accDescr: Decision flow for ranking: supersession first, relevance second.
+    F["Eligible rows"] --> S["Drop superseded<br/>Eligible rows only"]
     S --> H{"Overlap > 0?"}
-    H -- No --> I["<b>Omit</b><br/>No matches: abstain"]
-    H -- Yes --> J["<b>Rank + top_k</b><br/>Stable order"]
-    classDef input fill:#e8e6df,stroke:#55534a,color:#20201d,stroke-width:2px;
-    classDef pass fill:#d2e5d8,stroke:#38734d,color:#183923,stroke-width:2px;
-    classDef stop fill:#f4dadd,stroke:#b14253,color:#611c29,stroke-width:2px;
+    H -- No --> I["Omit<br/>No matches: abstain"]
+    H -- Yes --> J["Rank + top_k<br/>Stable order"]
+    classDef input stroke-width:1.5px;
+    classDef pass stroke-width:2.5px;
+    classDef stop stroke-width:2px,stroke-dasharray:5 3;
     class F,S,H input;
     class J pass;
     class I stop;
