@@ -12,6 +12,9 @@ A memory is not allowed for retrieval but matches perfectly. Response: exclude i
 ## Future supersession rewrites history
 A newer record hides an older record at a time when the newer record was not yet known. Response: only eligible superseding records can suppress older ones.
 
+## Stale or self-referential supersession erases valid memory
+An older eligible row names a newer row in `supersedes`, or a row names itself. Response: require a strictly later `learned_at` instant for the superseding row, independent of backdated world validity.
+
 ## No eligible result
 Everything is stale, forbidden, retired, or irrelevant. Response: abstain.
 
