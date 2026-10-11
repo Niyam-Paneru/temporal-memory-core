@@ -2,14 +2,28 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from datetime import datetime
-import re
+import unicodedata
 
 from .filters import active_memories
 from .models import Memory
 
 
 def tokens(text: str) -> set[str]:
-    return set(re.findall(r"[a-z0-9]+", text.lower()))
+    words: set[str] = set()
+    current: list[str] = []
+
+    # Unicode combining marks are part of words, including in Devanagari.
+    for character in unicodedata.normalize("NFKC", text).casefold():
+        kind = unicodedata.category(character)[0]
+        if kind in {"L", "N"} or (kind == "M" and current):
+            current.append(character)
+        elif current:
+            words.add("".join(current))
+            current.clear()
+
+    if current:
+        words.add("".join(current))
+    return words
 
 
 def lexical_score(query: str, memory: Memory) -> int:

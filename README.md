@@ -103,6 +103,6 @@ Verification commands and expected checks: [`docs/verification.md`](docs/verific
 
 ## Scope
 
-The repository uses synthetic records and lexical token overlap. It does **not** include personal memory data, ChatGPT exports, persistence, embeddings/vector search, a model adapter, or production access controls.
+The repository uses synthetic records and lexical token overlap. The tokenizer is Unicode-aware (NFKC normalization, casefolding, letters/numbers and attached combining marks), so scripts such as Devanagari are not silently discarded. It remains a simple delimiter-based matcher, not a language-specific word segmenter; text without word delimiters can require a separate segmenter. It does **not** include personal memory data, ChatGPT exports, persistence, embeddings/vector search, a model adapter, or production access controls.
 
 See [`SECURITY.md`](SECURITY.md), [`PROVENANCE.md`](PROVENANCE.md), [`docs/invariants.md`](docs/invariants.md), and [`docs/eligibility-table.md`](docs/eligibility-table.md) for the narrower contracts.
