@@ -4,7 +4,7 @@
 2. **A memory unknown at the requested knowledge time is invisible.**
 3. **A memory invalid at the requested world time is invisible.**
 4. **Use permission is checked before relevance.**
-5. **Only an eligible newer record can supersede an older record.**
+5. **Only an eligible, strictly later-learned record can supersede an older record.** Compare `learned_at` instants, not `valid_from`; equal-time and self-supersession references are ignored.
 6. **Retired memories do not participate in retrieval.**
 7. **No eligible relevant memory → abstain.**
 
