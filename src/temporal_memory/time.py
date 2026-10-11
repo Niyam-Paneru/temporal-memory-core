@@ -19,8 +19,12 @@ def require_aware(value: datetime, *, name: str) -> datetime:
 
 
 def known_by(learned_at: str, *, known_at: datetime) -> bool:
-    learned = parse_utc(learned_at)
+    # Invalid query clocks are caller errors, even if the record itself is bad.
     known_at = require_aware(known_at, name="known_at")
+    try:
+        learned = parse_utc(learned_at)
+    except (TypeError, ValueError, AttributeError, OverflowError):
+        return False  # invalid evidence never becomes eligible
     return learned is not None and learned <= known_at
 
 
@@ -31,10 +35,15 @@ def valid_at(
     valid_until: str | None,
     at: datetime,
 ) -> bool:
-    learned = parse_utc(learned_at)
-    start = parse_utc(valid_from) or learned
-    end = parse_utc(valid_until)
     at = require_aware(at, name="at")
+    try:
+        learned = parse_utc(learned_at)
+        start = parse_utc(valid_from) or learned
+        end = parse_utc(valid_until)
+    except (TypeError, ValueError, AttributeError, OverflowError):
+        # In particular, a malformed valid_until must not be mistaken for
+        # an absent end date (which would make a memory valid forever).
+        return False
 
     if start is None or at < start:
         return False
