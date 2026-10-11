@@ -67,7 +67,7 @@ flowchart TB
 2. **Valid at `at`?** `at` must fall inside the record's valid-time interval.
 3. **Allowed for this use?** `required_use` must be in `allowed_use`.
 4. **Active?** `status` must equal `"active"`.
-5. **Superseded by an eligible row?** Only rows that survived the first four gates can supersede older rows.
+5. **Superseded by an eligible, later-learned row?** Only rows surviving the first four gates with a strictly later `learned_at` than their target can supersede an older row. A self-reference or equal-time record cannot erase its target.
 6. **Relevant?** Remaining rows receive lexical token-overlap scores; zero-overlap rows are dropped, then results are sorted and truncated to `top_k`.
 
 An ineligible row cannot score its way back into a result, and a future or forbidden superseding row cannot erase an older eligible memory.
