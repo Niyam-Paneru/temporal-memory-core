@@ -1,115 +1,33 @@
 # Temporal Memory Core
 
-An office moved on February 1, but the assistant learned about it on February 10. What could it honestly have answered on February 5? This Python component tracks **when a fact was true** separately from **when the system knew it**.
+An office moved on **February 1**. The assistant only found out on **February 10**.
 
-It also checks permission and supersession before relevance ranking. Even a perfect text match doesn't get a time machine.
+Someone asks: "What did we know on February 5?"
 
-**Try it / check the behavior:**
+A memory system that ignores *when it learned something* will confidently use future knowledge to answer a question about the past. Very helpful. Also time travel.
 
-```bash
+This Python component keeps two clocks:
+
+| Clock | What it asks |
+| --- | --- |
+| **Valid time** | When was the fact true in the world? |
+| **Knowledge time** | When did this system know about it? |
+
+So a query for February 5 with knowledge cut off on February 5 **excludes** the move. A query about February 5 with knowledge available through February 20 can include it. Same historical date, different knowledge boundary.
+
+## It's more than timestamps
+
+Before relevance scoring, retrieval checks valid time, known time, allowed use, and active status. Only eligible memories get to supersede older ones. After that, the public ranking uses lexical overlap — deliberately simple, not secretly a giant language model hiding under the floorboards.
+
+No eligible match? Return nothing rather than pretending.
+
+## Run the examples
+
+```sh
 python -m pip install -e .
 python -m unittest discover -s tests
 ```
 
-Deterministic synthetic-memory component; not a complete deployed AI memory service. [Verification](docs/verification.md).
+Look at [time logic](src/temporal_memory/time.py), [filters and supersession](src/temporal_memory/filters.py), [ranking](src/temporal_memory/ranking.py), and [tests](tests/). The [eligibility table](docs/eligibility-table.md) has the complete rules.
 
-## Eligibility: decide what may enter retrieval
-
-Check knowledge time, valid time, use permission, and active status in that order. The exact conditions are listed below.
-
-```mermaid
----
-config:
-  flowchart:
-    curve: linear
-    nodeSpacing: 28
-    rankSpacing: 42
----
-flowchart LR
-    accTitle: Eligibility: decide what may enter retrieval
-    accDescr: Decision flow for eligibility: decide what may enter retrieval.
-    A["Candidate rows"] --> E{"Eligible?"}
-    E -- No --> X["Exclude<br/>Before ranking"]
-    E -- Yes --> F["Eligible rows"]
-    classDef input stroke-width:1.5px;
-    classDef pass stroke-width:2.5px;
-    classDef stop stroke-width:2px,stroke-dasharray:5 3;
-    class A,E input;
-    class F pass;
-    class X stop;
-```
-
-## Ranking: supersession first, relevance second
-
-Only eligible rows can supersede another memory. Then lexical overlap decides whether a surviving row belongs in the result; no overlap means omission, and no matching rows means abstention.
-
-```mermaid
----
-config:
-  flowchart:
-    curve: linear
-    nodeSpacing: 28
-    rankSpacing: 42
----
-flowchart TB
-    accTitle: Ranking: supersession first, relevance second
-    accDescr: Decision flow for ranking: supersession first, relevance second.
-    F["Eligible rows"] --> S["Drop superseded<br/>Eligible rows only"]
-    S --> H{"Overlap > 0?"}
-    H -- No --> I["Omit<br/>No matches: abstain"]
-    H -- Yes --> J["Rank + top_k<br/>Stable order"]
-    classDef input stroke-width:1.5px;
-    classDef pass stroke-width:2.5px;
-    classDef stop stroke-width:2px,stroke-dasharray:5 3;
-    class F,S,H input;
-    class J pass;
-    class I stop;
-```
-
-## Eligibility before relevance
-
-`retrieve()` narrows candidates in this order:
-
-1. **Known by `known_at`?** `learned_at <= known_at`; otherwise exclude future knowledge.
-2. **Valid at `at`?** `at` must fall inside the record's valid-time interval.
-3. **Allowed for this use?** `required_use` must be in `allowed_use`.
-4. **Active?** `status` must equal `"active"`.
-5. **Superseded by an eligible row?** Only rows that survived the first four gates can supersede older rows.
-6. **Relevant?** Remaining rows receive lexical token-overlap scores; zero-overlap rows are dropped, then results are sorted and truncated to `top_k`.
-
-An ineligible row cannot score its way back into a result, and a future or forbidden superseding row cannot erase an older eligible memory.
-
-## Two clocks, one example
-
-Suppose an office moved on **February 1**, but the system learned that fact on **February 10**:
-
-| Clock | Timestamp | Meaning |
-|---|---|---|
-| Valid time (`valid_from`) | `2026-02-01T00:00:00Z` | The move is true in the world from February 1. |
-| Learned time (`learned_at`) | `2026-02-10T00:00:00Z` | The system first knows that fact on February 10. |
-
-For a historical query at `at=2026-02-05T00:00:00Z`:
-
-| `known_at` | Result | Why |
-|---|---|---|
-| `2026-02-20T00:00:00Z` | include | The system now knows the move was already true on February 5. |
-| `2026-02-05T00:00:00Z` | exclude | That view cannot use knowledge learned five days later. |
-
-That is why world time (`at`) and knowledge time (`known_at`) are separate.
-
-## Inspect the implementation
-
-| File | Responsibility |
-|---|---|
-| [`time.py`](src/temporal_memory/time.py) | UTC parsing, knowledge-time and valid-time semantics |
-| [`filters.py`](src/temporal_memory/filters.py) | use permission, lifecycle, eligible-only supersession |
-| [`ranking.py`](src/temporal_memory/ranking.py) | lexical scoring, abstention, deterministic ordering |
-| [`tests/`](tests/) | time, filtering, supersession, ranking, and retrieval behavior |
-
-Verification commands and expected checks: [`docs/verification.md`](docs/verification.md).
-
-## Scope
-
-The repository uses synthetic records and lexical token overlap. It does **not** include personal memory data, ChatGPT exports, persistence, embeddings/vector search, a model adapter, or production access controls.
-
-See [`SECURITY.md`](SECURITY.md), [`PROVENANCE.md`](PROVENANCE.md), [`docs/invariants.md`](docs/invariants.md), and [`docs/eligibility-table.md`](docs/eligibility-table.md) for the narrower contracts.
+The sample uses synthetic facts. No personal memory dump, vector index, persistence service, authenticated user access, or deployed AI assistant is included. [Verification](docs/verification.md) · [provenance](PROVENANCE.md).
