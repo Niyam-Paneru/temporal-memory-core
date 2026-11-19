@@ -1,10 +1,17 @@
 # Temporal Memory Core
 
-A Python implementation of temporal memory eligibility: decide what was known, what was valid, and what was allowed for a specific use **before** relevance ranking begins.
+An office moved on February 1, but the assistant learned about it on February 10. What could it honestly have answered on February 5? This Python component tracks **when a fact was true** separately from **when the system knew it**.
 
-**Even a perfect text match does not get a time machine.**
+It also checks permission and supersession before relevance ranking. Even a perfect text match doesn't get a time machine.
 
-This public sample comes from my private Niyam-AI memory work. It exposes the retrieval rules with synthetic records; I can build and adapt the surrounding memory stores, search layers, and application integrations.
+**Try it / check the behavior:**
+
+```bash
+python -m pip install -e .
+python -m unittest discover -s tests
+```
+
+Deterministic synthetic-memory component; not a complete deployed AI memory service. [Verification](docs/verification.md).
 
 ## Eligibility: decide what may enter retrieval
 
