@@ -21,11 +21,55 @@ Before relevance scoring, retrieval checks valid time, known time, allowed use, 
 
 No eligible match? Return nothing rather than pretending.
 
-## Run the examples
+## The retrieval order matters
 
-```sh
-python -m pip install -e .
-python -m unittest discover -s tests
+A perfect search match is still excluded if the system wasn't allowed to know or use it at that time.
+
+```mermaid
+---
+config:
+  flowchart:
+    curve: linear
+    nodeSpacing: 28
+    rankSpacing: 42
+---
+flowchart LR
+    accTitle: Eligibility: decide what may enter retrieval
+    accDescr: Decision flow for eligibility: decide what may enter retrieval.
+    A["Candidate rows"] --> E{"Eligible?"}
+    E -- No --> X["Exclude<br/>Before ranking"]
+    E -- Yes --> F["Eligible rows"]
+    classDef input stroke-width:1.5px;
+    classDef pass stroke-width:2.5px;
+    classDef stop stroke-width:2px,stroke-dasharray:5 3;
+    class A,E input;
+    class F pass;
+    class X stop;
+```
+
+Only then does ranking decide which surviving memories are relevant.
+
+```mermaid
+---
+config:
+  flowchart:
+    curve: linear
+    nodeSpacing: 28
+    rankSpacing: 42
+---
+flowchart TB
+    accTitle: Ranking: supersession first, relevance second
+    accDescr: Decision flow for ranking: supersession first, relevance second.
+    F["Eligible rows"] --> S["Drop superseded<br/>Eligible rows only"]
+    S --> H{"Overlap > 0?"}
+    H -- No --> I["Omit<br/>No matches: abstain"]
+    H -- Yes --> J["Rank + top_k<br/>Stable order"]
+    classDef input stroke-width:1.5px;
+    classDef pass stroke-width:2.5px;
+    classDef stop stroke-width:2px,stroke-dasharray:5 3;
+    class F,S,H input;
+    class J pass;
+    class I stop;
 ```
 
 Look at [time logic](src/temporal_memory/time.py), [filters and supersession](src/temporal_memory/filters.py), [ranking](src/temporal_memory/ranking.py), and [tests](tests/). The [eligibility table](docs/eligibility-table.md) has the complete rules.
