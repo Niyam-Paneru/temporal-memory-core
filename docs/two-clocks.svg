@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="415" viewBox="0 0 920 415" role="img" aria-labelledby="ttl ds">
+<title id="ttl">Two clocks in temporal memory</title>
+<desc id="ds">The office move became true on February 1, but the system only learned it on February 10. A historical February 5 question with knowledge cut off February 5 excludes the move; asking about the same date with knowledge available through February 20 can include it.</desc>
+<rect width="920" height="415" rx="16" fill="#FCFCFA"/>
+<text x="38" y="40" fill="#64748B" font-family="Arial,Helvetica,sans-serif" font-weight="700" letter-spacing="2" font-size="15">TEMPORAL MEMORY / TWO CLOCKS</text>
+<text x="38" y="89" fill="#192B36" font-family="Arial,Helvetica,sans-serif" font-size="32" font-weight="700">True on Feb 1. Learned on Feb 10.</text>
+<text x="38" y="119" fill="#475569" font-family="Arial,Helvetica,sans-serif" font-size="17">The same historical question can have different answers as knowledge changes.</text>
+<line x1="105" y1="204" x2="837" y2="204" stroke="#B9C7D4" stroke-width="3"/>
+<text x="38" y="172" fill="#475569" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700">Timeline</text>
+<g fill="#475569" font-size="16" font-family="Arial,Helvetica,sans-serif" text-anchor="middle"><text x="135" y="236">Feb 1</text><text x="342" y="236">Feb 5</text><text x="547" y="236">Feb 10</text><text x="785" y="236">Feb 20</text></g>
+<g stroke="#A5B4C1" stroke-width="2"><line x1="135" y1="195" x2="135" y2="213"/><line x1="342" y1="195" x2="342" y2="213"/><line x1="547" y1="195" x2="547" y2="213"/><line x1="785" y1="195" x2="785" y2="213"/></g>
+<circle cx="135" cy="204" r="8" fill="#283B4B"/><circle cx="547" cy="204" r="8" fill="#147D77"/>
+<line x1="135" y1="195" x2="135" y2="157" stroke="#283B4B" stroke-width="2"/><line x1="547" y1="195" x2="547" y2="157" stroke="#147D77" stroke-width="2"/>
+<text x="151" y="163" fill="#283B4B" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700">Office moved</text>
+<text x="563" y="163" fill="#147D77" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700">Assistant learned it</text>
+<rect x="38" y="267" width="406" height="109" rx="10" fill="#F0F3F6" stroke="#DCE3E9"/>
+<text x="57" y="297" fill="#334155" font-family="Arial,Helvetica,sans-serif" font-size="16">Ask about Feb 5, knowing only up to Feb 5</text>
+<text x="57" y="335" fill="#192B36" font-family="Arial,Helvetica,sans-serif" font-size="23" font-weight="700">Exclude the move</text>
+<text x="57" y="358" fill="#64748B" font-family="Arial,Helvetica,sans-serif" font-size="15">It hadn't been learned yet.</text>
+<rect x="466" y="267" width="416" height="109" rx="10" fill="#EAF4F1" stroke="#B6D9CF"/>
+<text x="485" y="297" fill="#31574E" font-family="Arial,Helvetica,sans-serif" font-size="16">Ask about Feb 5, knowing up to Feb 20</text>
+<text x="485" y="335" fill="#147D77" font-family="Arial,Helvetica,sans-serif" font-size="23" font-weight="700">Include the move</text>
+<text x="485" y="358" fill="#55756B" font-family="Arial,Helvetica,sans-serif" font-size="15">Known now, and valid on Feb 5.</text>
+</svg>
