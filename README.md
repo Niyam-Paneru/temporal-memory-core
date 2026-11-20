@@ -6,6 +6,8 @@ Ask what the assistant knew on February 5. It tells you the *new* address. Great
 
 This Python module gives memories two clocks: **when the fact was true** and **when the assistant actually learned it**.
 
+![Two-clock timeline: an office move on February 1, learned February 10; a February 5 knowledge cutoff must not use the later discovery](docs/two-clocks.svg)
+
 ## Time travel, but with paperwork
 
 | Question | Valid date | Knowledge cutoff | Result |
