@@ -1,12 +1,12 @@
 # Temporal Memory Core
 
-The office moves on **February 1**. Nobody tells the assistant until **February 10**.
+An office moves on **February 1**. The assistant doesn't hear about it until **February 10**.
 
-Ask what it knew on February 5. If it confidently gives you the new address, it has either mastered time travel or quietly cheated on the timeline. I'm not betting on time travel.
+Ask what the assistant knew on February 5. It tells you the *new* address. Great — you've built a time machine. Shame it only works by answering the wrong question.
 
-This Python module keeps **when a fact was true** separate from **when the assistant learned it**.
+This Python module gives memories two clocks: **when the fact was true** and **when the assistant actually learned it**.
 
-## Two clocks, one event
+## Time travel, but with paperwork
 
 | Question | Valid date | Knowledge cutoff | Result |
 | --- | --- | --- | --- |
@@ -16,7 +16,7 @@ This Python module keeps **when a fact was true** separate from **when the assis
 
 **Valid time** tells us when the fact was true. **Knowledge time** tells us when the system learned it. A historical answer needs both.
 
-## First check the calendar. Then the permission.
+## The boring checks that prevent magical knowledge
 
 Retrieval filters by allowed use, valid-time bounds, knowledge-time bounds, and active status **before** ranking. Only eligible newer memories can supersede older eligible ones. The public ranking uses lexical overlap, not a hidden LLM.
 
@@ -24,4 +24,4 @@ Relevant source: [time logic](src/temporal_memory/time.py), [filters and superse
 
 This is a **synthetic-memory rule engine**. It does not include a personal memory dump, vector index, persistence service, real user authentication, or a deployed AI assistant.
 
-Remembering a fact is easy. Remembering whether you were even supposed to know it yet is where the trouble starts.
+If the assistant knows tomorrow's news yesterday, I'd like to borrow it for the lottery. Until then, the timestamps stay separate.
