@@ -1,23 +1,27 @@
 # Temporal Memory Core
 
-An office moved on **February 1**. The assistant only found out on **February 10**.
+An office moves on **February 1**. The assistant learns about the move on **February 10**.
 
-Someone asks: "What did we know on February 5?"
+Ask what it knew on February 5. If it gives you the new address, congratulations: you've built a time machine, and unfortunately it only works for incorrect answers.
 
-A memory system that ignores *when it learned something* will confidently use future knowledge to answer a question about the past. Very helpful. Also time travel.
+This Python module separates **when a fact was true** from **when the assistant learned it**.
 
-![Timeline of an office move on February 1, learned on February 10, and the different answers available at February 5 and February 20 knowledge cutoffs](docs/two-clocks.svg)
+## Two clocks; one inconvenient calendar
 
-**Valid time** is when the fact was true. **Knowledge time** is when the assistant learned it. Querying February 5 with knowledge cut off on February 5 excludes the move. Querying that same date with knowledge available through February 20 can include it.
+| Question | Valid date | Knowledge cutoff | Result |
+| --- | --- | --- | --- |
+| “What could we say on February 5?” | Feb 5 | Feb 5 | Exclude the move; we hadn't learned it |
+| “Knowing what we know now, what was true on February 5?” | Feb 5 | Feb 20 | The move can be included; we learned it Feb 10 |
+| “What if no eligible fact matches?” | Any | Any | No invented memory; return no match |
 
-## It's more than timestamps
+The distinction is between **valid time** and **knowledge time**. They answer different questions; squashing them into one timestamp doesn't make them agree.
 
-Before relevance scoring, retrieval checks valid time, known time, allowed use, and active status. Only eligible memories get to supersede older ones. After that, the public ranking uses lexical overlap — deliberately simple, not secretly a giant language model hiding under the floorboards.
+## Permission before cleverness
 
-No eligible match? Return nothing rather than pretending.
+Retrieval filters by allowed use, valid-time bounds, knowledge-time bounds, and active status **before** ranking. Only eligible newer memories can supersede older eligible ones. The public ranking is lexical overlap, not a hidden LLM performing dramatic deductions under the floorboards.
 
-Eligibility happens before relevance. Use permissions, valid-time bounds, knowledge-time bounds, and active status filter candidates; only eligible rows may supersede older memories. **Then** lexical ranking decides what matches.
+Relevant source: [time logic](src/temporal_memory/time.py), [filters and supersession](src/temporal_memory/filters.py), [ranking](src/temporal_memory/ranking.py), and [tests](tests/). For precise cases, use the [eligibility table](docs/eligibility-table.md) and [verification](docs/verification.md).
 
-Look at [time logic](src/temporal_memory/time.py), [filters and supersession](src/temporal_memory/filters.py), [ranking](src/temporal_memory/ranking.py), and [tests](tests/). The [eligibility table](docs/eligibility-table.md) has the complete rules.
+This is a **synthetic-memory rule engine**. It does not include a personal memory dump, vector index, persistence service, real user authentication, or a deployed AI assistant.
 
-The sample uses synthetic facts. No personal memory dump, vector index, persistence service, authenticated user access, or deployed AI assistant is included. [Verification](docs/verification.md) · [provenance](PROVENANCE.md).
+The point isn't to remember everything. It's to remember what you were actually allowed to know **at the time**, which turns out to be the harder part.
