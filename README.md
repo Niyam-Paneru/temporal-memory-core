@@ -1,12 +1,10 @@
 # Temporal Memory Core
 
-An office moves on **February 1**. The assistant doesn't hear about it until **February 10**.
+An office moves on **February 1**. The assistant only learns about it on **February 10**. Ask what it knew on February 5, and it confidently gives the new address.
 
-Ask what the assistant knew on February 5. It tells you the *new* address. Great — you've built a time machine. Shame it only works by answering the wrong question.
+I've apparently built a time machine. Terrible feature for a memory system.
 
-This Python module gives memories two clocks: **when the fact was true** and **when the assistant actually learned it**.
-
-![Two-clock timeline: an office move on February 1, learned February 10; a February 5 knowledge cutoff must not use the later discovery](docs/two-clocks.svg)
+This Python module keeps two dates for a fact: **when it was true**, and **when the assistant learned it**. They aren't interchangeable.
 
 ## Time travel, but with paperwork
 
