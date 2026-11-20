@@ -1,10 +1,10 @@
 # Temporal Memory Core
 
-An office moves on **February 1**. The assistant learns about the move on **February 10**.
+The office moves on **February 1**. Nobody tells the assistant until **February 10**.
 
-Ask what it knew on February 5. If it gives you the new address, that's time travel — and not the useful kind.
+Ask what it knew on February 5. If it confidently gives you the new address, it has either mastered time travel or quietly cheated on the timeline. I'm not betting on time travel.
 
-This Python module separates **when a fact was true** from **when the assistant learned it**.
+This Python module keeps **when a fact was true** separate from **when the assistant learned it**.
 
 ## Two clocks, one event
 
@@ -16,7 +16,7 @@ This Python module separates **when a fact was true** from **when the assistant 
 
 **Valid time** tells us when the fact was true. **Knowledge time** tells us when the system learned it. A historical answer needs both.
 
-## Permission before cleverness
+## First check the calendar. Then the permission.
 
 Retrieval filters by allowed use, valid-time bounds, knowledge-time bounds, and active status **before** ranking. Only eligible newer memories can supersede older eligible ones. The public ranking uses lexical overlap, not a hidden LLM.
 
@@ -24,4 +24,4 @@ Relevant source: [time logic](src/temporal_memory/time.py), [filters and superse
 
 This is a **synthetic-memory rule engine**. It does not include a personal memory dump, vector index, persistence service, real user authentication, or a deployed AI assistant.
 
-The point isn't to remember everything. It's to remember what you were actually allowed to know **at the time**, which turns out to be the harder part.
+Remembering a fact is easy. Remembering whether you were even supposed to know it yet is where the trouble starts.
